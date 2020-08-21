@@ -1,10 +1,10 @@
 ---
 layout: post
-title:  "Windows 10 multi-user app install failure - Windows Installer Coordinator "
+title:  "Windows 10 multi-session app install failure - Windows Installer Coordinator "
 date:   2020-08-17 19:35:02 +0100
 --- 
 
-Deploying apps to Windows 10 multi-user is _almost_ the same as deploying apps to normal Windows 10 but there are some quirks. One of these quirks can cause some MSI installers to fail.
+Deploying apps to Windows 10 multi-session is _almost_ the same as deploying apps to normal Windows 10 but there are some quirks. One of these quirks can cause some MSI installers to fail.
 
 I first saw this installing IBM SPSS 26 for use in WVD
 
@@ -14,7 +14,7 @@ I first saw this installing IBM SPSS 26 for use in WVD
 >   
 > Please wait while the application is preparing for the first use
 
-What is the Windows Installer Coordinator? It is a component, enabled by default on multi-user Windows, that stops multiple MSI installs from running concurrently. [docs.microsoft.com][msdnarticle] has a good write up about this feature on RDS machines
+What is the Windows Installer Coordinator? It is a component, enabled by default on multi-session Windows, that stops multiple MSI installs from running concurrently. [docs.microsoft.com][msdnarticle] has a good write up about this feature on RDS machines
 
 > A multiple package installation using the MsiEmbeddedChainer table fails if the Remote Desktop Services role is enabled.
 
