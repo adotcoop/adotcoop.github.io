@@ -16,6 +16,8 @@ At University of Strathclyde I lead a team that has been responsible for archite
 
 <div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="f20fcc53-ddc7-4672-b2ff-4c0e20b91585" data-share-badge-host="https://www.youracclaim.com"></div><script type="text/javascript" async src="//cdn.youracclaim.com/assets/utilities/embed.js"></script>
 
+<div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="142707d0-50a5-4e1d-b3ba-20b86a57a265" data-share-badge-host="https://www.youracclaim.com"></div><script type="text/javascript" async src="//cdn.youracclaim.com/assets/utilities/embed.js"></script>
+
 ## About this site
 
 This site focuses on the main technologies I know about -  SCCM (MEMCM), Intune, VDI (WVD _and_ Citrix) and Windows. For a while I did a bit of Information Security and became a CISSP so there might be a bit of cybersecurity thrown in.

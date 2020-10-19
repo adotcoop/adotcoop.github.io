@@ -28,6 +28,8 @@ twitter_username: adotcoop
 github_username:  adotcoop
 linkedin_username: adotcoop
 
+google_analytics: UA-180853385-1
+
 # Build settings
 theme: minima
 plugins:
