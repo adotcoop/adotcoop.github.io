@@ -10,6 +10,8 @@ One thing it doesn't do is adjust the time offset automatically, and this causes
 
 In the UK we have just moved from British Summer Time (UTC+1) to Greenwich Mean Time (UTC+0). This means that the peak hours defined in the WVD Scaling tool are off by one hour.
 
+<!--more-->
+
 ## Checking the offset 
 - Open up [portal.azure.com](https://portal.azure.com) and go to Automation Accounts
 

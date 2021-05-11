@@ -12,6 +12,8 @@ On launch the app would pop up a dialog with the error
 
 ![alt text](/assets/solidworks_error.png "Solidworks error")
 
+<!--more-->
+
 Dismissing the dialog allowed the app to continue loading but it was a cause for concern. In a situation like this we have two priorities
 
 1. get the app working
