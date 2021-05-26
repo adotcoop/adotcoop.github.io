@@ -182,10 +182,10 @@ Assuming you are happy with the audit information you can start setting rules to
 
 One thing to note is that in the above examples, we set some local group policies with a GUID set to a value of 2. The range of values that can be set are
 
-- 0. Disable
-- 1. Block
-- 2. Audit
-- 6. Warn
+- 0 Disable
+- 1 Block
+- 2 Audit
+- 6 Warn
 
 To set something to block just change the value (however you set it) from 2 to 1.
 
