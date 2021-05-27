@@ -4,16 +4,20 @@ title:  "Mitigate the impact of malware for free with Microsoft Defender attack 
 date:   2021-05-26 20:31:42 +0100
 --- 
 
-Attack surface reduction rules are normally talked about in relation to Defender for Endpoint - a premium offering requiring E5/A5 or an add-on subscription to E3/A3. However, the core asr rules functionality is built into the Defender engine on Windows 10, and you can still use it without these licenses. You'll have to do the reporting and monitoring yourself, but the rules work on any of the following without any additional licensing
+Attack surface reduction rules are normally talked about in relation to Defender for Endpoint - a premium offering requiring E5/A5 or an add-on subscription to E3/A3. However, the core asr rules functionality is built into the Defender engine on Windows 10, and you can still use it on the following without any additional licensing
 
 - Windows 10 Pro, version 1709 or later
 - Windows 10 Enterprise, version 1709 or later
 - Windows Server, version 1803 (Semi-Annual Channel) or later
 - Windows Server 2019
 
-Asr rules can really improve the security posture of your environment and can be a really quick win. They provide an extra layer of defense on top of your normal signature based antivirus solution. For the best experience you can license Defender for Endpoint, but there is still a bunch of great functionality that can be enabled for free (assuming you have one of the operating systems listed above). 
+You'll have to do the reporting and monitoring yourself, but we'll discuss that shortly.
+
+Asr rules can improve the security posture of your environment and can be a quick win. They provide an extra layer of defence on top of the normal signature based Windows Defender solution.  
 
 In this article I'll be covering one approach to enabling attack surface reduction for free and will provide scripts to enable asr rules and to gather logs from your devices. There are a couple of sections on how attack surface reduction rules differ from signature based antivirus - if you already know the difference you can skip them. 
+
+One thing to note - you need to be using the built in Windows Defender as your antivirus solution for these rules to work.
 
 * TOC
 {:toc}
@@ -98,9 +102,13 @@ So far, so good. Behaviour based rules help fill in a missing piece of your anti
 
 All of these rules help to reduce the attack surface of your devices. However, you may have software that depends on functionality that would be blocked by these rules. 
 
-The rule _Block process creations originating from PSExec and WMI commands_ looks very desirable - many attacks use psexec for lateral movement or to elevate to privilege levels that standard tools can't manage. But turning on this rule will break some functionality that is used by Configuration Manager (SCCM or MEMCM if you prefer).
+The rule _Block process creations originating from PSExec and WMI commands_ looks very desirable - many attacks use psexec for lateral movement or to elevate to privilege levels that standard tools can't manage. But turning on this rule will break some functionality that is used by Configuration Manager. Intune appears to be unaffected, but enabling this rule with SCCM is a no-no.
 
-Other rules might impact things in ways you can't foresee. Luckily asr supports enabling these rules in several states
+Another rule that would be good to use if possible is _Block credential stealing from the Windows local security authority subsystem (lsass.exe)_ as this helps defend against tools like mimikatz. Turning this on can lead to a lot of events being generated as Microsoft state on the [docs page](https://docs.microsoft.com/en-us/microsoft-365/security/defender-endpoint/attack-surface-reduction)
+
+> In some apps, the code enumerates all running processes and attempts to open them with exhaustive permissions. This rule denies the app's process open action and logs the details to the security event log. This rule can generate a lot of noise. If you have an app that simply enumerates LSASS, but has no real impact in functionality, there is NO need to add it to the exclusion list. By itself, this event log entry doesn't necessarily indicate a malicious threat.
+
+As these examples show, rules that seem to be obvious wins can have unintended consequences. Luckily asr supports enabling these rules in several states to help us mitigate any possible side effects
 
 - Audit
 - Block
@@ -122,11 +130,11 @@ There are a number of different ways to turn these rules on. These include
 
 These are well documented on the Microsoft [docs.microsoft.com](https://docs.microsoft.com/en-us/microsoft-365/security/defender-endpoint/enable-attack-surface-reduction) site.
 
-Although the documentation is good, enabling the rules is not very user friendly. For example, here's the group policy configured to audit Adobe Reader child process creation
+Although the documentation is good, enabling the rules is not very user friendly. For example, here's a local group policy being configured to audit Adobe Reader child process creation
 
 ![alt text](/assets/asr_grouppolicy.png "Local Group Policy editor")
 
-The Microsoft documentation is good, but you do need to do the lookup between GUID and rule name yourself. And to configure more than one rule in group policy is time consuming.
+Yes, you do need to do the lookup between GUID and rule name yourself. And to configure more than one rule in group policy is time consuming. Intune exposes these settings using the OMA-URI interface - a particularly unfriendly way to configure settings. Configuration Manager is a lot better but doesn't expose all settings that are available. 
 
 For my testing I wanted something easy that would enable all the rules in audit mode. The following reg file sets the local group policy to audit all 15 rules. Import this and do a gpupdate for the rules to take effect.
 
@@ -136,7 +144,7 @@ One thing to note here - if you configure the rules in any other way these local
 
 # How to retrieve audited log entries
 
-After the rules have been enabled, and you've given them time to generate some events (Microsoft suggest at least 30 days), you'll want to analyse the information. This is where Defender for Endpoint would come in - it is superb for this task. Because we are doing this for free, we need to come up with something ourselves. 
+After the rules have been enabled, and you've given them time to generate some events (Microsoft suggest at least 30 days), you'll want to analyse the information. This is where Defender for Endpoint would come in. If you can, use that. Because we are doing this for free, we need to come up with something ourselves. 
 
 When the rules fire in audit mode an event is generated in the Defender Operational log with event ID 1122. If we had configured the rules to block behaviour, the ID would be 1121. 
 
@@ -207,9 +215,11 @@ If you are going to use exclusions try to limit their use to only the devices th
 
 Attack surface reduction rules are a very cool bit of functionality built into Defender and, by extension, built into most of the supported OSs from Microsoft. 
 
-If you configure them as described in this article you're getting a pretty decent HIPS solution for free. 
+If you configure the rules as described in this article you're getting a pretty decent HIPS solution for free. 
 
 One thing is obviously missing here - the reporting and monitoring piece. Just enabling the rules will give you some level of protection, but how can you tell when rules fire?
 
 You could alter the event log dumping script to achieve some of these goals, but if you're going to that level maybe it's time to discuss a SIEM or E5 with your management.
+
+The other conversation that can be generated by this technology is around the quality of the software that is running on your devices. If you have to make a security exception because software you pay for behaves badly, maybe it can help make the case to embed more rigorous security requirements into your procurement processes.
  
